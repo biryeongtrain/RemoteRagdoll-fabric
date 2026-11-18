@@ -24,7 +24,7 @@ Bukkit API 를 쓰지 않고, 조각은 BetterModel Fabric 의 패킷 API 로만
 | Windows | x64 / x64+AVX2 | `Windows64`, `Windows64_avx2` |
 
 기본은 호환성이 넓은 기본판이다. `-Dremoteragdoll.jolt.variant=avx2`(Windows) 또는 `fma`(Linux)로 빠른 판을 고를 수 있다.
-Windows ARM64 는 jolt-jni 1.0.0 에 네이티브가 없어 지원하지 않는다.
+Windows ARM64 네이티브는 넣지 않았다.
 
 ## 쓰는 법
 
