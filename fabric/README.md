@@ -31,7 +31,7 @@ Windows ARM64 네이티브는 넣지 않았다.
 - 플레이어가 죽으면 그 자리에 시체가 남는다(`on-death`).
 - 걸어서 밀치기, 맨손/무기 휘두르기로 걷어차기(`kick-strength`).
 - `/ragdoll [player]` — 그 플레이어 모습의 시체를 그 자리에 떨어뜨린다.
-- `/ragdoll at <x> <y> <z> [world]`, `/ragdoll clear` (게임마스터 권한)
+- `/ragdoll at <x> <y> <z> [world]`, `/ragdoll clear`, `/ragdoll where`(조각 좌표 출력, 디버그용) — 게임마스터 권한
 - 설정: `config/remoteragdoll.properties` (첫 실행 때 기본값이 복사된다)
 
 Java 에서는 `kr.gcb.dungeon.model.Corpses`, `kr.gcb.dungeon.physics.{PhysicsWorld, Shoves}` 를 그대로 쓴다.
@@ -53,5 +53,5 @@ Java 에서는 `kr.gcb.dungeon.model.Corpses`, `kr.gcb.dungeon.physics.{PhysicsW
 
 ## 검증 상태
 
-- 확인: macOS ARM64 개발 서버에서 Jolt 로드, `/ragdoll` 과 사망 시 시체 생성, 스킨·갑옷 표시, `/ragdoll clear`.
-- 미확인: Windows·Linux 네이티브 실제 로드(패키징만 확인), 걷어차기·밀치기, 여러 명이 동시에 볼 때, 사망자 숨김 패킷.
+- 확인: macOS ARM64 개발 서버에서 Jolt 로드, `/ragdoll` 과 사망 시 시체 생성, 스킨·갑옷 표시, `/ragdoll clear`, 걸어서 밀치기(약 5블록 이동)와 휘둘러 걷어차기(약 1블록 이동, `/ragdoll where` 좌표로 확인).
+- 미확인: Windows·Linux 네이티브 실제 로드(패키징만 확인), 여러 명이 동시에 볼 때, 사망자 숨김 패킷.

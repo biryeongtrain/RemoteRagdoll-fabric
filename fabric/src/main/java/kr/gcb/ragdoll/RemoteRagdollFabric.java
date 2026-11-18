@@ -97,6 +97,7 @@ public final class RemoteRagdollFabric implements ModInitializer {
                 Commands.literal("ragdoll").requires(s -> s.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER))
                         .executes(c -> dropOf(c, c.getSource().getPlayerOrException()))
                         .then(Commands.literal("clear").executes(this::clear))
+                        .then(Commands.literal("where").executes(this::where))
                         .then(Commands.literal("at")
                                 .then(Commands.argument("x", DoubleArgumentType.doubleArg())
                                         .then(Commands.argument("y", DoubleArgumentType.doubleArg())
@@ -261,6 +262,28 @@ public final class RemoteRagdollFabric implements ModInitializer {
         }
         int cleared = n;
         c.getSource().sendSuccess(() -> Component.literal("Cleared " + cleared + " physics bodies."), false);
+        return n;
+    }
+
+    /** Lists where every limb is, for checking that a shove or a kick moved something. */
+    private int where(CommandContext<CommandSourceStack> c) {
+        if (off(c)) return 0;
+        ServerLevel world = c.getSource().getLevel();
+        PhysicsWorld physics = worlds.get(world);
+        if (physics == null || physics.trackedCount() == 0) {
+            c.getSource().sendSuccess(() -> Component.literal("No bodies here."), false);
+            return 0;
+        }
+        net.minecraft.world.phys.Vec3 from = c.getSource().getPosition();
+        StringBuilder out = new StringBuilder();
+        int n = 0;
+        for (kr.gcb.dungeon.physics.PhysicsBody limb : physics.near(new Location(world, from.x, from.y, from.z), 64)) {
+            Location at = limb.location();
+            out.append(String.format(java.util.Locale.ROOT, " (%.2f %.2f %.2f)", at.getX(), at.getY(), at.getZ()));
+            n++;
+        }
+        int count = n;
+        c.getSource().sendSuccess(() -> Component.literal(count + " limbs:" + out), false);
         return n;
     }
 
