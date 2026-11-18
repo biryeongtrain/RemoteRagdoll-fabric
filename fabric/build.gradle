@@ -1,0 +1,76 @@
+plugins {
+    id 'net.fabricmc.fabric-loom' version '1.18.2'
+}
+
+version = project.mod_version + "+" + project.minecraft_version
+group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
+
+// Every platform jolt-jni publishes a native for (same list as tomalbrc/Dynamo).
+// The "_fma" / "_avx2" variants are optional faster builds for the same OS and CPU; see JoltNatives.
+def joltPlatforms = [
+        "Linux64",
+        "Linux64_fma",
+        "Linux_ARM32hf",
+        "Linux_ARM64",
+        "MacOSX64",
+        "MacOSX_ARM64",
+        "Windows64",
+        "Windows64_avx2"
+]
+
+repositories {
+    mavenCentral()
+    maven { url 'https://maven.nucleoid.xyz' }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    // BetterModel's Fabric build: cuts the player skin into limb items and sends the display packets.
+    // Not bundled - the server installs BetterModel itself (with its own dependencies).
+    compileOnly("io.github.toxicity188:bettermodel-fabric:${project.bettermodel_version}") { transitive = false }
+    compileOnly("io.github.toxicity188:bettermodel-api:${project.bettermodel_version}") { transitive = false }
+    compileOnly("io.github.toxicity188:bettermodel-mod-api:${project.bettermodel_version}") { transitive = false }
+    // For runServer: BetterModel carries most of what it needs inside its own jar; these two it does not.
+    localRuntime("io.github.toxicity188:bettermodel-fabric:${project.bettermodel_version}") { transitive = false }
+    localRuntime "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
+    localRuntime "eu.pb4:polymer-resource-pack:${project.polymer_version}"
+    // Serves the generated pack to clients that join the dev server (enable it in run/config/polymer/auto-host.json).
+    localRuntime "eu.pb4:polymer-autohost:${project.polymer_version}"
+
+    // Jolt: the Java classes are the same in every platform artifact, so they are taken once;
+    // each platform's native library (single precision, release) goes into the jar next to them.
+    implementation include("com.github.stephengold:jolt-jni-Linux64:${project.jolt_version}")
+    joltPlatforms.each { variant ->
+        include("com.github.stephengold:jolt-jni-${variant}:${project.jolt_version}:ReleaseSp")
+        localRuntime("com.github.stephengold:jolt-jni-${variant}:${project.jolt_version}:ReleaseSp")
+    }
+}
+
+processResources {
+    inputs.property "version", project.version
+    filteringCharset "UTF-8"
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = "UTF-8"
+    it.options.release.set(25)
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(25)
+}
+
+jar {
+    // Jolt is a native library: the server JVM also needs --enable-native-access=ALL-UNNAMED.
+    manifest.attributes["Enable-Native-Access"] = "ALL-UNNAMED"
+}

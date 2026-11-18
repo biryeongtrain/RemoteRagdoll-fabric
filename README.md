@@ -3,6 +3,8 @@
 Minecraft 26.3 (Paper 계열) 서버용 **Jolt 물리 래그돌**. 같은 물리 엔진([jolt-jni](https://github.com/stephengold/jolt-jni) 1.0.0)
 위에서 모델을 그리는 방식이 다른 두 구현이 들어 있다.
 
+> **Fabric 판**: bettermodel 방식을 Fabric 서버 모드로 옮긴 것이 [`fabric/`](fabric) 에 있다 (macOS·Windows·Linux, x64·ARM64).
+
 | | [`modelengine/`](modelengine) | [`bettermodel/`](bettermodel) |
 |---|---|---|
 | 그리는 것 | ModelEngine 모델의 본 → PacketEvents 아이템 디스플레이 | BetterModel 이 플레이어 스킨을 부위별로 자른 조각 → BetterModel 패킷 |

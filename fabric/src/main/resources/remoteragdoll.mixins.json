@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "kr.gcb.ragdoll.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "PunchMixin",
+    "ResourcePackMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "remoteragdoll",
+  "version": "${version}",
+  "name": "RemoteRagdoll",
+  "description": "Jolt physics ragdolls for dead players, drawn from BetterModel skin slices (Fabric port of RemoteRagdoll-BetterModel).",
+  "authors": ["RemoteKar"],
+  "contributors": ["biryeongtrain (Fabric port)"],
+  "contact": {
+    "sources": "https://github.com/biryeongtrain/RemoteRagdoll-fabric"
+  },
+  "environment": "*",
+  "entrypoints": {
+    "main": ["kr.gcb.ragdoll.RemoteRagdollFabric"]
+  },
+  "mixins": ["remoteragdoll.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.19.0",
+    "minecraft": ">=26.3",
+    "java": ">=25",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "bettermodel": ">=3.6.0"
+  }
+}
