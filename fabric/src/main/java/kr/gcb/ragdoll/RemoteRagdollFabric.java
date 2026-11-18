@@ -187,6 +187,41 @@ public final class RemoteRagdollFabric implements ModInitializer {
         }
     }
 
+    // ------------------------------------------------------------------ api (kr.gcb.ragdoll.api.Ragdolls)
+
+    public static boolean apiReady() { return instance != null && instance.ready; }
+
+    public static Object apiDrop(ServerPlayer whose, ServerLevel level, net.minecraft.world.phys.Vec3 at, float yaw,
+                                 net.minecraft.world.phys.Vec3 push, int ticks) {
+        RemoteRagdollFabric mod = instance;
+        if (mod == null || !mod.ready || whose == null || level == null || at == null) return null;
+        PhysicsWorld physics = mod.physics(level);
+        if (physics == null) return null;
+        Location where = new Location(level, at.x, at.y, at.z);
+        where.setYaw(yaw);
+        try {
+            Skins.Skin skin = Skins.of(whose);
+            kr.gcb.dungeon.model.Ragdoll.Blow blow = new kr.gcb.dungeon.model.Ragdoll.Blow(
+                    kr.gcb.dungeon.model.BodyPlan.Wound.INTACT, push == null ? new Vector() : Vector.of(push));
+            return kr.gcb.dungeon.model.Ragdoll.spawn(mod.host, physics, where, skin != null ? skin.url() : PLAIN_SKIN,
+                    skin != null && skin.slim(), Math.max(1, ticks), kr.gcb.dungeon.model.Ragdoll.Kit.of(whose), blow,
+                    mod.host.getDouble("corpse.seam-pixels", 0.0), whose.getUUID());
+        } catch (Throwable t) {
+            LOGGER.warn("Could not make a ragdoll", t);
+            return null;
+        }
+    }
+
+    public static net.minecraft.world.phys.Vec3 apiMiddle(Object handle) {
+        if (!apiReady() || handle == null) return null;
+        Location at = Corpses.middle(handle);
+        return at == null ? null : new net.minecraft.world.phys.Vec3(at.getX(), at.getY(), at.getZ());
+    }
+
+    public static void apiRemove(Object handle) {
+        if (apiReady() && handle != null) Corpses.dispel(handle);
+    }
+
     // ------------------------------------------------------------------ events
 
     private void onHit(LivingEntity entity, DamageSource source, float base, float taken, boolean blocked) {

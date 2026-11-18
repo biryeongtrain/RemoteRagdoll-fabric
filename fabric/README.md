@@ -34,7 +34,9 @@ Windows ARM64 네이티브는 넣지 않았다.
 - `/ragdoll at <x> <y> <z> [world]`, `/ragdoll clear`, `/ragdoll where`(조각 좌표 출력, 디버그용) — 게임마스터 권한
 - 설정: `config/remoteragdoll.properties` (첫 실행 때 기본값이 복사된다)
 
-Java 에서는 `kr.gcb.dungeon.model.Corpses`, `kr.gcb.dungeon.physics.{PhysicsWorld, Shoves}` 를 그대로 쓴다.
+다른 모드에서는 `kr.gcb.ragdoll.api.Ragdolls`(`ready` · `drop` · `middle` · `remove`)만 부르면 된다. `./gradlew publishToMavenLocal` 로 `kr.gcb.ragdoll:remoteragdoll-fabric` 이 올라간다.
+
+내부 API 를 직접 쓰려면 `kr.gcb.dungeon.model.Corpses`, `kr.gcb.dungeon.physics.{PhysicsWorld, Shoves}` 를 그대로 쓴다.
 좌표·벡터는 `kr.gcb.ragdoll.compat.{Location, Vector}`.
 
 ## Bukkit 판과 다른 점

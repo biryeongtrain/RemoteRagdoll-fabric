@@ -1,4 +1,5 @@
 plugins {
+    id 'maven-publish'
     id 'net.fabricmc.fabric-loom' version '1.18.2'
 }
 
@@ -73,4 +74,13 @@ java {
 jar {
     // Jolt is a native library: the server JVM also needs --enable-native-access=ALL-UNNAMED.
     manifest.attributes["Enable-Native-Access"] = "ALL-UNNAMED"
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'remoteragdoll-fabric'
+            from components.java
+        }
+    }
 }
