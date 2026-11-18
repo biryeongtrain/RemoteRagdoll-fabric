@@ -30,6 +30,13 @@ public final class Ragdolls {
         return RemoteRagdollFabric.apiDrop(whose, level, at, yaw, push, ticks);
     }
 
+    /**
+     * The same, optionally torn apart: with {@code torn} no joint holds and the six parts scatter.
+     */
+    public static Object drop(ServerPlayer whose, ServerLevel level, Vec3 at, float yaw, Vec3 push, int ticks, boolean torn) {
+        return RemoteRagdollFabric.apiDrop(whose, level, at, yaw, push, ticks, torn);
+    }
+
     /** Where the body is now (its middle), or null once it is gone. */
     public static Vec3 middle(Object handle) { return RemoteRagdollFabric.apiMiddle(handle); }
 

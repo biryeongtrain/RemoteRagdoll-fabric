@@ -193,6 +193,11 @@ public final class RemoteRagdollFabric implements ModInitializer {
 
     public static Object apiDrop(ServerPlayer whose, ServerLevel level, net.minecraft.world.phys.Vec3 at, float yaw,
                                  net.minecraft.world.phys.Vec3 push, int ticks) {
+        return apiDrop(whose, level, at, yaw, push, ticks, false);
+    }
+
+    public static Object apiDrop(ServerPlayer whose, ServerLevel level, net.minecraft.world.phys.Vec3 at, float yaw,
+                                 net.minecraft.world.phys.Vec3 push, int ticks, boolean torn) {
         RemoteRagdollFabric mod = instance;
         if (mod == null || !mod.ready || whose == null || level == null || at == null) return null;
         PhysicsWorld physics = mod.physics(level);
@@ -202,7 +207,7 @@ public final class RemoteRagdollFabric implements ModInitializer {
         try {
             Skins.Skin skin = Skins.of(whose);
             kr.gcb.dungeon.model.Ragdoll.Blow blow = new kr.gcb.dungeon.model.Ragdoll.Blow(
-                    kr.gcb.dungeon.model.BodyPlan.Wound.INTACT, push == null ? new Vector() : Vector.of(push));
+                    torn ? kr.gcb.dungeon.model.BodyPlan.Wound.SHATTERED : kr.gcb.dungeon.model.BodyPlan.Wound.INTACT, push == null ? new Vector() : Vector.of(push));
             return kr.gcb.dungeon.model.Ragdoll.spawn(mod.host, physics, where, skin != null ? skin.url() : PLAIN_SKIN,
                     skin != null && skin.slim(), Math.max(1, ticks), kr.gcb.dungeon.model.Ragdoll.Kit.of(whose), blow,
                     mod.host.getDouble("corpse.seam-pixels", 0.0), whose.getUUID());
